@@ -2,34 +2,25 @@
 # visit http://127.0.0.1:8050/ in your web browser.
 
 from dash import Dash, html, dcc
+import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
+import time
+from layout import CONTENT_STYLE, layout
+from pages.dummy import layout as layout_dummy
 
-app = Dash(__name__)
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])    
+print('rendering...')
 server = app.server
+start = time.time()
 
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
+app.layout = html.Div([
+    layout,
+    layout_dummy,
+],
+style=CONTENT_STYLE)
 
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
-
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
-
-    html.Div(children='''
-        Dash: A web application framework for your data.
-    '''),
-
-    dcc.Graph(
-        id='example-graph',
-        figure=fig
-    )
-])
+print(f'render complete {round(time.time() - start, 2)}s)')
 
 if __name__ == '__main__':
     app.run_server(debug=True)
