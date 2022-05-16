@@ -6,12 +6,12 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
 import time
-
 from layout import CONTENT_STYLE, layout
 from pages.dummy import layout as layout_dummy
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])    
 print('rendering...')
+server = app.server
 start = time.time()
 
 app.layout = html.Div([
