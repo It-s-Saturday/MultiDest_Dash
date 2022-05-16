@@ -38,5 +38,10 @@ sidebar = html.Div(
     style=SIDEBAR_STYLE,
 )
 
-
-layout = html.Div(sidebar, style=CONTENT_STYLE)
+layout = html.Div(
+    [
+        dcc.Location(id="url"),
+        sidebar
+    ], 
+    style=CONTENT_STYLE
+)
