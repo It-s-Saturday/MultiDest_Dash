@@ -15,5 +15,19 @@ layout = html.Div(
             placeholder = "Origin"
         
         ),
+    
+    
+        dcc.Input(
+            id ="input_Stops",
+            type = "text",
+            placeholder = "Stops"
+
+        ),
+        dcc.Input(
+            id ="input_Destination",
+            type = "text",
+            placeholder = "Destination"
+
+        )
     ]
 )
