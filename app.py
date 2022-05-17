@@ -6,13 +6,13 @@ import plotly.express as px
 import pandas as pd
 
 from layout import layout
-from pages.dummy import layout as layout_dummy
+from pages.contact import layout as layout_contact
 
 app = Dash(__name__)
                          
 app.layout = html.Div([
     layout,
-    layout_dummy
+    layout_contact
 ])
 if __name__ == '__main__':
     app.run_server(debug=True)
