@@ -6,7 +6,11 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
 import time
+
+from layout import layout
 from layout import CONTENT_STYLE, layout
+
+from pages.contact import layout as layout_contact
 from pages.dummy import layout as layout_dummy
 from pages.home_page import layout as layout_home
 
@@ -17,7 +21,7 @@ start = time.time()
 
 app.layout = html.Div([
     layout,
-    # layout_dummy,
+    layout_contact
     layout_home,
 ],
 style=CONTENT_STYLE)
