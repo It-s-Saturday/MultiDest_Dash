@@ -1,7 +1,3 @@
-
-from cgitb import text
-from re import A
-from tkinter import Button
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output
 import plotly.express as px
