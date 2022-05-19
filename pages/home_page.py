@@ -6,13 +6,11 @@ layout = html.Div(
         dcc.RadioItems(["Time", "Distance"], "Time", inline=True),
         dcc.Input(id="input-origin", type="text", placeholder="Origin"),
         html.Div(id="stops", children=[]),
-        # html.Button('Add another Stop'),
-        # html.Div(id='container-button-basic'),
         dcc.Input(id="input-destination", type="text", placeholder="Destination"),
-        html.Button(id="btn-calculate", value="Calculate"),
+        html.Button("Calculate", id="btn-calculate"),
         html.Div(id="container-button-basic"),
-        html.Button(id="add-stop", value="Add Stop"),
-        html.Button(id="remove-stop", value="Remove Stop"),
+        html.Button("Add stop", id="add-stop"),
+        html.Button("Remove Stop", id="remove-stop"),
         html.Div(id="output"),
     ]
 )

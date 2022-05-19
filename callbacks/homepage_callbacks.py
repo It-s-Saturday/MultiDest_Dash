@@ -10,7 +10,7 @@ from dash import Input, Output, State, callback, callback_context, dcc, html, no
     ],
 )
 def update_stops(add_clicks, remove_clicks, children):
-    if add_clicks is None:
+    if add_clicks is None and remove_clicks is None:
         return no_update
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
     print(children)
