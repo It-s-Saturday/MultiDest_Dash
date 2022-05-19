@@ -3,7 +3,7 @@ from dash import dcc, html
 layout = html.Div(
     [
         html.Hgroup(children="Prioritize"),
-        dcc.Checklist(["Time", "Distance"], inline=True),
+        dcc.RadioItems(["Time", "Distance"], "Time", inline=True),
         dcc.Input(id="input-origin", type="text", placeholder="Origin"),
         html.Div(id="stops", children=[]),
         # html.Button('Add another Stop'),
