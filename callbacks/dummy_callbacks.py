@@ -1,8 +1,6 @@
 
-
-
 @app.callback(
-    Output(component_id='result',type='value'),
+    Output(component_id='result', type='value'),
     Input(component_id='origin', component_property='value'),
     Input(component_id='stop-list', component_property='value'),
     Input(component_id='destination', component_property='value'),
