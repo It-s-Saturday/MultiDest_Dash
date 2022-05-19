@@ -22,10 +22,8 @@ layout = html.Div(
     
         html.Div(
             id="stops",
-            children=[]
+            children=[],
         ),
-        # html.Button('Add another Stop'),
-        # html.Div(id='container-button-basic'),
         dcc.Input(
             id ="input_Destination",
             type = "text",
