@@ -14,7 +14,7 @@ layout = html.Div(
     ),
     dcc.Input(
             
-            id="input_Origin",
+            id="input-origin",
             type = "text",
             placeholder = "Origin"
         
@@ -27,7 +27,7 @@ layout = html.Div(
         # html.Button('Add another Stop'),
         # html.Div(id='container-button-basic'),
         dcc.Input(
-            id ="input_Destination",
+            id ="input-destination",
             type = "text",
             placeholder = "Destination"
 
