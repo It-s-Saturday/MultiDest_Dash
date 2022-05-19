@@ -7,14 +7,11 @@ from callbacks import homepage_callbacks
 
 layout = html.Div(
     [
-    html.Hgroup(children = 'Prioritize'),
-    dcc.Checklist(
-    ['Time', 'Distance'],
-    inline=True
-    ),
+    html.H4(children = 'Prioritize'),
+    dcc.RadioItems(["Time", "Distance"], "Time", inline=True),
     dcc.Input(
             
-            id="input-origin",
+            id="input_Origin",
             type = "text",
             placeholder = "Origin"
         
@@ -27,7 +24,7 @@ layout = html.Div(
         # html.Button('Add another Stop'),
         # html.Div(id='container-button-basic'),
         dcc.Input(
-            id ="input-destination",
+            id ="input_Destination",
             type = "text",
             placeholder = "Destination"
 
