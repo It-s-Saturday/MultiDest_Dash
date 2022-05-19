@@ -1,5 +1,4 @@
 import dash_bootstrap_components as dbc
-from app import app
 from dash import Input, Output, html, callback
 from pages import about_page, contact_page, dummy_page, home_page
 

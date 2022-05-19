@@ -1,7 +1,7 @@
-
-from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
+from dash import dcc, html
 
+from pages import home_page
 
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -37,13 +37,12 @@ sidebar = html.Div(
     ],
     style=SIDEBAR_STYLE,
 )
-content = html.Div(id="page-content", style=CONTENT_STYLE)
-
-layout = html.Div(
+content = html.Div(
     [
-        dcc.Location(id="url"),
-        sidebar,
-        content
-    ],
-    style=CONTENT_STYLE
+        home_page.layout,
+    ],  # Default on load is home_page
+    id="page-content",
+    style=CONTENT_STYLE,
 )
+
+layout = html.Div([dcc.Location(id="url"), sidebar, content])
