@@ -26,3 +26,27 @@ def update_stops(add_clicks, remove_clicks, children):
         return []
     else:
         return []
+
+
+@callback(
+    Output("output", "children"),
+    [
+        Input("btn-calculate", "n_clicks"),
+        State("input-origin", "value"),
+        State("input-destination", "value"),
+        State("stops", "children"),
+    ],
+)
+def update_output(n_clicks, origin, destination, stops):
+    if n_clicks is None:
+        return no_update
+
+    def stops_to_list(stops):
+        return [stop['props']['value'] for stop in stops]
+
+    s_parsed = stops_to_list(stops)
+    return [
+        html.Div(f"Origin: {origin}"),
+        html.Div(f"Destination: {destination}"),
+        html.Div(f"Stops: {s_parsed}"),
+    ]
