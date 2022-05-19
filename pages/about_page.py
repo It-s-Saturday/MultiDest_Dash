@@ -1,9 +1,11 @@
-import os 
+import os
+
 from dash import Dash, html, dcc
 import plotly.express as px
 import pandas as pd
 import base64
 import dash_html_components as html
+
 Div = html.Div([
     html.H1('What is MultiDest'),
     html.Div([ 
@@ -19,7 +21,6 @@ Div = html.Div([
     ])
     
 ])  
-
 
 image_filename = os.getcwd()+'/pages/AM.png'  # replace with your own image
 print(image_filename)
