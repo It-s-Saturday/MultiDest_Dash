@@ -12,6 +12,6 @@ class InputStore:
         return [self.origin] + self.stops + [self.destination]
 
     def __str__(self) -> str:
-        return "Origin: {}\nDestination: {}\nStops: {}\nMethod: {}\nChoice: {}".format(
+        return "====================\nOrigin: {}\nDestination: {}\nStops: {}\nMethod: {}\nChoice: {}\n====================".format(
             self.origin, self.destination, self.stops, self.method, self.choice
         )

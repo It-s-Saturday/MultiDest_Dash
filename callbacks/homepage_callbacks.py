@@ -43,7 +43,7 @@ def update_stops(add_clicks, remove_clicks, children):
         State("input-origin", "value"),
         State("input-destination", "value"),
         State("stops", "children"),
-        State("input-method", "value"),
+        State("input-metric", "value"),
     ],
 )
 def update_output(n_clicks, origin, destination, stops, method):
@@ -61,7 +61,8 @@ def update_output(n_clicks, origin, destination, stops, method):
             return html.Div(
                 f"{f'Error: {e} ' if e else ''}Please enter a valid stop! (Stop {i+1}) "
             )
-    d = Driver(origin, destination, s_parsed, "driving", "time")
+    d = Driver(origin, destination, s_parsed, "driving", method.lower())
+    print(d)
     return [
         html.Div(f"Origin: {origin}"),
         html.Div(f"Destination: {destination}"),

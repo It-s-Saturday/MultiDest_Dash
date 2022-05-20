@@ -4,7 +4,7 @@ layout = html.Div(
     [
         html.Hgroup(children="Prioritize"),
         dcc.RadioItems(
-            id="input-method", options=["Time", "Distance"], value="Time", inline=True
+            id="input-metric", options=["Time", "Distance"], value="Time", inline=True
         ),
         dcc.Input(id="input-origin", type="text", placeholder="Origin"),
         html.Div(

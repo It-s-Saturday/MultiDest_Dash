@@ -8,11 +8,18 @@ class Driver:
         self.time = Timer()
         self.build()
 
-    def __str__(self):
-        return "Origin: {}\nDestination: {}\nStops: {}\nMethod: {}\nChoice: {}".format(
-            self.origin, self.destination, self.stops, self.method, self.choice
-        )
-
     def build(self):
-        for location in self.input_store.as_list():
-            print(location)
+        len_store = len(self.input_store.as_list())
+        iterable = enumerate(self.input_store.as_list())
+        for i, this_location in iterable:
+            for j, other_location in iterable:
+                if (
+                    (i == j)
+                    or (i == 0 and j == len_store - 1)
+                    or (i == len_store - 1 and j == 0)
+                ):
+                    continue
+                print(this_location, other_location)
+
+    def __str__(self):
+        return self.input_store.__str__()
