@@ -24,10 +24,10 @@ def update_stops(add_clicks, remove_clicks, children):
             dcc.Input(id=f"stop_{add_clicks}", type="text", placeholder=f"Stop {stop_counter}")
         ]
     elif "remove-stop" in changed_id:
-        if len(children) > 0:
+        if len(children) > 2:
             children.pop()
             return children
-        return []
+        return children
     else:
         return []
 
