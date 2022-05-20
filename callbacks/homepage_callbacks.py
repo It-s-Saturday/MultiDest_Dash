@@ -48,9 +48,12 @@ def update_output(n_clicks, origin, destination, stops):
     s_parsed = []
     for i, stop in enumerate(stops):
         try:
-            s_parsed.append(stop["props"]["value"])
-        except:
-            return html.Div(f"Please enter a valid stop! (Stop {i+1})")
+            if stop["props"]["value"] not in s_parsed:
+                s_parsed.append(stop["props"]["value"])
+            else:
+                raise Exception("Possible duplicate value")
+        except Exception as e: 
+            return html.Div(f"{f'Error: {e} ' if e else ''}Please enter a valid stop! (Stop {i+1}) ")
     return [
         html.Div(f"Origin: {origin}"),
         html.Div(f"Destination: {destination}"),
