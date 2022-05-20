@@ -7,6 +7,7 @@ class InputStore:
         self.stops = stops
         self.method = method
         self.choice = choice
+        print(f'Initialized:\n{self}')
 
     def as_list(self) -> list:
         return [self.origin] + self.stops + [self.destination]
