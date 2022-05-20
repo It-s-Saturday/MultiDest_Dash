@@ -1,6 +1,9 @@
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
+from logic.driver import Driver
+from models import InputStore, Timer
 
 stop_counter = 0
+
 
 @callback(
     Output("stops", "children"),
@@ -13,15 +16,16 @@ stop_counter = 0
 def update_stops(add_clicks, remove_clicks, children):
     if add_clicks is None and remove_clicks is None:
         return no_update
-    stop_counter = add_clicks
-    if add_clicks and remove_clicks:
-        stop_counter = add_clicks - remove_clicks
+   
+    stop_counter = len(children) + 1
+    
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
-    print(children)
-    print(changed_id)
+    
     if "add-stop" in changed_id:
         return children + [
-            dcc.Input(id=f"stop_{add_clicks}", type="text", placeholder=f"Stop {stop_counter}")
+            dcc.Input(
+                id=f"stop_{add_clicks}", type="text", placeholder=f"Stop {stop_counter}"
+            )
         ]
     elif "remove-stop" in changed_id:
         if len(children) > 2:
@@ -39,9 +43,10 @@ def update_stops(add_clicks, remove_clicks, children):
         State("input-origin", "value"),
         State("input-destination", "value"),
         State("stops", "children"),
+        State("input-method", "value"),
     ],
 )
-def update_output(n_clicks, origin, destination, stops):
+def update_output(n_clicks, origin, destination, stops, method):
     if n_clicks is None:
         return no_update
 
@@ -52,8 +57,11 @@ def update_output(n_clicks, origin, destination, stops):
                 s_parsed.append(stop["props"]["value"])
             else:
                 raise Exception("Possible duplicate value")
-        except Exception as e: 
-            return html.Div(f"{f'Error: {e} ' if e else ''}Please enter a valid stop! (Stop {i+1}) ")
+        except Exception as e:
+            return html.Div(
+                f"{f'Error: {e} ' if e else ''}Please enter a valid stop! (Stop {i+1}) "
+            )
+    d = Driver(origin, destination, s_parsed, "driving", "time")
     return [
         html.Div(f"Origin: {origin}"),
         html.Div(f"Destination: {destination}"),
