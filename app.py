@@ -17,7 +17,6 @@ app.layout = html.Div(
     ],
     style=CONTENT_STYLE,
 )
-time.sleep(0.2)
 print(f"render complete {round(time.time() - start, 2)}s)")
 
 if __name__ == "__main__":

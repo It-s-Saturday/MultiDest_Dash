@@ -1,5 +1,6 @@
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
 
+stop_counter = 0
 
 @callback(
     Output("stops", "children"),
@@ -12,12 +13,15 @@ from dash import Input, Output, State, callback, callback_context, dcc, html, no
 def update_stops(add_clicks, remove_clicks, children):
     if add_clicks is None and remove_clicks is None:
         return no_update
+    stop_counter = add_clicks
+    if add_clicks and remove_clicks:
+        stop_counter = add_clicks - remove_clicks
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
     print(children)
     print(changed_id)
     if "add-stop" in changed_id:
         return children + [
-            dcc.Input(id=f"stop_{add_clicks}", type="text", placeholder="Stop")
+            dcc.Input(id=f"stop_{add_clicks}", type="text", placeholder=f"Stop {stop_counter}")
         ]
     elif "remove-stop" in changed_id:
         if len(children) > 0:
@@ -41,10 +45,12 @@ def update_output(n_clicks, origin, destination, stops):
     if n_clicks is None:
         return no_update
 
-    def stops_to_list(stops):
-        return [stop['props']['value'] for stop in stops]
-
-    s_parsed = stops_to_list(stops)
+    s_parsed = []
+    for i, stop in enumerate(stops):
+        try:
+            s_parsed.append(stop["props"]["value"])
+        except:
+            return html.Div(f"Please enter a valid stop! (Stop {i+1})")
     return [
         html.Div(f"Origin: {origin}"),
         html.Div(f"Destination: {destination}"),
