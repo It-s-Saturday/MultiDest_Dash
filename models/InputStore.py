@@ -6,7 +6,7 @@ class InputStore:
         self.destination = destination
         self.stops = stops
         self.method = method
-        self.choice = choice
+        self.choice = choice.lower() if not "Time" else "duration"
         print(f'Initialized:\n{self}')
 
     def as_list(self) -> list:
