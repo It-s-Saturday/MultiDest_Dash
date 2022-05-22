@@ -10,11 +10,11 @@ class Driver:
     def __init__(self, origin, destination, stops, method, choice):
         self.input_store = InputStore(origin, destination, stops, method, choice)
         self.already_looked_up = {}
-        self.time = Timer()
         self.GoogleApi = GoogleApi()
         self.build_valid_paths()
         self.adj_matrix = {}
         self.build_adj_matrix()
+        
 
     def build_valid_paths(self):
         len_store = len(self.input_store.as_list())
@@ -31,19 +31,20 @@ class Driver:
         return valid_paths
 
     def build_adj_matrix(self):
-        for i_origin in self.input_store.as_list():
-            for i_dest in self.input_store.as_list():
+        with Timer('build matrix') as matrix_timer:
+            for i_origin in self.input_store.as_list():
+                for i_dest in self.input_store.as_list():
 
-                if i_origin == i_dest:
-                    continue
-                lookup = self.lookup(i_origin, i_dest)
-                converted_origin = self.already_looked_up[i_origin]
-                converted_dest = self.already_looked_up[i_dest]
-                if converted_origin not in self.adj_matrix:
-                    self.adj_matrix[converted_origin] = {converted_dest: lookup}
-                else:
-                    self.adj_matrix[converted_origin][converted_dest] = lookup
-        debug('matrix', self.adj_matrix)
+                    if i_origin == i_dest:
+                        continue
+                    lookup = self.lookup(i_origin, i_dest)
+                    converted_origin = self.already_looked_up[i_origin]
+                    converted_dest = self.already_looked_up[i_dest]
+                    if converted_origin not in self.adj_matrix:
+                        self.adj_matrix[converted_origin] = {converted_dest: lookup}
+                    else:
+                        self.adj_matrix[converted_origin][converted_dest] = lookup
+            debug('matrix', self.adj_matrix)
 
     def lookup(self, a, b):
         to_lookup = []

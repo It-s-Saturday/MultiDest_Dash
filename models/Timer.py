@@ -1,7 +1,8 @@
 import time
 
 class Timer:
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.start = time.time()
     
     def current_time(self):
@@ -11,5 +12,5 @@ class Timer:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        print("{} took {} seconds".format(self.name, self.current_time()))
+        print("Operation {} took {} seconds".format(self.name, self.current_time()))
     
