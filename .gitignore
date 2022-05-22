@@ -3,3 +3,4 @@ __pycache__
 node_modules/
 old_logic/
 key
+*test*

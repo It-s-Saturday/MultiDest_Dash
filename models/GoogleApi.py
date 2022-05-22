@@ -20,7 +20,7 @@ class GoogleApi:
         destination = destination_in.replace(" ", "+")
         url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"
         concat = f"{url}origins={origin}&destinations={destination}&key={self.api_key}&mode={mode}"
-        print(concat)
+        # print(concat)
         r = requests.get(concat)
         measurement = r.json()["rows"][0]["elements"][0][choice]["text"]
 
@@ -32,7 +32,7 @@ class GoogleApi:
         destination = search.replace(" ", "+")
         url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"
         concat = f"{url}origins={origin}&destinations={destination}&key={self.api_key}&mode={mode}"
-        print(concat)
+        # print(concat)
         r = requests.get(concat)
         name = r.json()["destination_addresses"][0]
         return name
