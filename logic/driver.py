@@ -18,7 +18,7 @@ class Driver:
 
     def build_valid_paths(self):
         len_store = len(self.input_store.as_list())
-        intermediates = permutations(self.input_store.as_list()[1:-1])
+        intermediates = permutations(self.input_store.as_list()[1:-1]) #self.input_store.stops
         out = [x for x in intermediates]
         valid_paths = []
         for permutation in out:
@@ -32,7 +32,7 @@ class Driver:
 
     def build_adj_matrix(self):
         with Timer('build matrix') as matrix_timer:
-            for i_origin in self.input_store.as_list():
+            for i_origin in self.input_store.as_list()[:-1]:
                 for i_dest in self.input_store.as_list():
 
                     if i_origin == i_dest:
