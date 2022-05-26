@@ -16,7 +16,8 @@ class Driver:
         self.valid_paths = self.build_valid_paths()
         self.adj_matrix = {}
         self.build_adj_matrix()
-        debug("best path", self.naive_tsp())
+        self.best_path = self.naive_tsp()
+        debug("best path", self.best_path)
 
     def naive_tsp(self):
         with Timer("naive tsp") as naive_timer:

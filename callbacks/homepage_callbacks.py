@@ -63,7 +63,5 @@ def update_output(n_clicks, origin, destination, stops, method):
             )
     d = Driver(origin, destination, s_parsed, "driving", method.lower())
     return [
-        html.Div(f"Origin: {origin}"),
-        html.Div(f"Destination: {destination}"),
-        html.Div(f"Stops: {s_parsed}"),
+        html.Div(f"Route: {d.best_path}"),
     ]
