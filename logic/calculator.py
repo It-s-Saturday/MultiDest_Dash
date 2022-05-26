@@ -1,6 +1,7 @@
 import math
 from logic.helpers import debug
 
+
 class Calculator:
     def __init__(self, adj_matrix=None, input_store=None):
         self.adj_matrix = adj_matrix
@@ -19,7 +20,9 @@ class Calculator:
                 if stop not in already_looked_up:
                     raise Exception("Unhandled stop exception")
 
-                lookup = lambda start, end: adj_matrix[already_looked_up[start]][already_looked_up[end]]
+                lookup = lambda start, end: adj_matrix[already_looked_up[start]][
+                    already_looked_up[end]
+                ]
 
                 between = lookup(stop, next_stop)
 
