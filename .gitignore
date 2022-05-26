@@ -4,3 +4,4 @@ node_modules/
 old_logic/
 key
 *test*
+secret.py
