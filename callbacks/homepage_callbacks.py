@@ -16,11 +16,11 @@ stop_counter = 0
 def update_stops(add_clicks, remove_clicks, children):
     if add_clicks is None and remove_clicks is None:
         return no_update
-   
+
     stop_counter = len(children) + 1
-    
+
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
-    
+
     if "add-stop" in changed_id:
         return children + [
             dcc.Input(
