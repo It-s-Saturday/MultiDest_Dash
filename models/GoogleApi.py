@@ -3,13 +3,14 @@ import googlemaps
 import requests
 from models.Timer import Timer
 
+if os.path.exists('./models/secret.py'):
+    from .secret import *
+else:
+    API_KEY = os.environ['API_KEY']
 
 class GoogleApi:
     def __init__(self):
-        key_path = os.getcwd() + "/models/key"
-        with open(key_path, "r") as filename:  # open the key.txt file on local machine
-            self.api_key = filename.read()  # set api_key to file content
-
+        self.api_key = API_KEY
         self.gmaps = googlemaps.Client(key=self.api_key)  # initialize googlemaps client
         print("OK")
 
