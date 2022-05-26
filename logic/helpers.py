@@ -1,11 +1,15 @@
+_debug = False
+
+
 def stars():
     print("*" * 10)
 
 
 def debug(*msg):
-    print()
-    stars()
-    for m in msg:
-        print(m)
-    stars()
-    print()
+    if _debug:
+        print()
+        stars()
+        for m in msg:
+            print(m)
+        stars()
+        print()

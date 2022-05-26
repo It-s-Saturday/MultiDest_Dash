@@ -13,9 +13,16 @@ class Driver:
         self.already_looked_up = {}
         self.GoogleApi = GoogleApi()
         self.Calculator = Calculator()
-        self.build_valid_paths()
+        self.valid_paths = self.build_valid_paths()
         self.adj_matrix = {}
         self.build_adj_matrix()
+        debug("best path", self.naive_tsp())
+
+    def naive_tsp(self):
+        with Timer("naive tsp") as naive_timer:
+            return self.Calculator.naive_tsp(
+                self.valid_paths, self.adj_matrix, self.already_looked_up
+            )
 
     def build_valid_paths(self):
         intermediates = permutations(self.input_store.stops)
@@ -27,14 +34,17 @@ class Driver:
                 + list(permutation)
                 + [self.input_store.destination]
             ]
-        print(f"created:\n{valid_paths}")
+        debug(f"created:\n{valid_paths}")
         return valid_paths
 
     def build_adj_matrix(self):
         with Timer("build matrix") as matrix_timer:
             for i_origin in self.input_store.as_list()[:-1]:
                 for i_dest in self.input_store.as_list()[1:]:
-                    if i_origin == i_dest or (i_origin == self.input_store.origin and i_dest == self.input_store.destination): 
+                    if i_origin == i_dest or (
+                        i_origin == self.input_store.origin
+                        and i_dest == self.input_store.destination
+                    ):
                         continue
                     lookup = self.Calculator.parse_time(self.lookup(i_origin, i_dest))
                     converted_origin = self.already_looked_up[i_origin]
@@ -55,11 +65,12 @@ class Driver:
 
         if to_lookup:
             for place in to_lookup:
-                print(f"looking up {place}")
+                debug(f"looking up {place}")
+                # Key = user input, Value = Google API response
                 self.already_looked_up[place] = self.GoogleApi.namelookup(
                     place, self.input_store.method, self.input_store.choice
                 )
-                print(self.already_looked_up[place])
+                debug(self.already_looked_up[place])
         debug(
             "stores",
             f"{a}: {self.already_looked_up[a]}",
