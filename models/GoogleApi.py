@@ -1,11 +1,11 @@
 import os
 import googlemaps
 import requests
-if os.path.exists('./secret.py'):
+
+if os.path.exists('./models/secret.py'):
     from .secret import *
 else:
     API_KEY = os.environ['API_KEY']
-
 
 class GoogleApi:
     def __init__(self):
