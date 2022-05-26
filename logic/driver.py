@@ -4,6 +4,7 @@ from models.GoogleApi import GoogleApi
 from models.InputStore import InputStore
 from models.Timer import Timer
 from logic.helpers import debug
+from logic.calculator import Calculator
 
 
 class Driver:
@@ -11,6 +12,7 @@ class Driver:
         self.input_store = InputStore(origin, destination, stops, method, choice)
         self.already_looked_up = {}
         self.GoogleApi = GoogleApi()
+        self.Calculator = Calculator()
         self.build_valid_paths()
         self.adj_matrix = {}
         self.build_adj_matrix()
@@ -31,10 +33,10 @@ class Driver:
     def build_adj_matrix(self):
         with Timer("build matrix") as matrix_timer:
             for i_origin in self.input_store.as_list()[:-1]:
-                for i_dest in self.input_store.as_list():
+                for i_dest in self.input_store.as_list()[1:]:
                     if i_origin == i_dest or (i_origin == self.input_store.origin and i_dest == self.input_store.destination): 
                         continue
-                    lookup = self.lookup(i_origin, i_dest)
+                    lookup = self.Calculator.parse_time(self.lookup(i_origin, i_dest))
                     converted_origin = self.already_looked_up[i_origin]
                     converted_dest = self.already_looked_up[i_dest]
                     if converted_origin not in self.adj_matrix:
