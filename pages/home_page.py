@@ -1,4 +1,5 @@
 from dash import dcc, html
+import dash_bootstrap_components as dbc
 
 layout = html.Div(
     [
@@ -19,6 +20,6 @@ layout = html.Div(
         html.Div(id="container-button-basic"),
         html.Button("Add stop", id="add-stop"),
         html.Button("Remove Stop", id="remove-stop"),
-        html.Div(id="output"),
+        dbc.Spinner(html.Div(id="output"), delay_hide=100, delay_show=100, show_initially=False),
     ]
 )
