@@ -14,11 +14,9 @@ class Driver:
         self.build_valid_paths()
         self.adj_matrix = {}
         self.build_adj_matrix()
-        
 
     def build_valid_paths(self):
-        len_store = len(self.input_store.as_list())
-        intermediates = permutations(self.input_store.as_list()[1:-1]) #self.input_store.stops
+        intermediates = permutations(self.input_store.stops)
         out = [x for x in intermediates]
         valid_paths = []
         for permutation in out:
@@ -31,11 +29,10 @@ class Driver:
         return valid_paths
 
     def build_adj_matrix(self):
-        with Timer('build matrix') as matrix_timer:
+        with Timer("build matrix") as matrix_timer:
             for i_origin in self.input_store.as_list()[:-1]:
                 for i_dest in self.input_store.as_list():
-
-                    if i_origin == i_dest:
+                    if i_origin == i_dest or (i_origin == self.input_store.origin and i_dest == self.input_store.destination): 
                         continue
                     lookup = self.lookup(i_origin, i_dest)
                     converted_origin = self.already_looked_up[i_origin]
@@ -44,7 +41,7 @@ class Driver:
                         self.adj_matrix[converted_origin] = {converted_dest: lookup}
                     else:
                         self.adj_matrix[converted_origin][converted_dest] = lookup
-            debug('matrix', self.adj_matrix)
+            debug("matrix", self.adj_matrix)
 
     def lookup(self, a, b):
         to_lookup = []
