@@ -78,62 +78,89 @@ layout = html.Div(
                     [
                         # html.Br(),
                         # html.Br(),
-                        html.Div(
+                        dbc.Accordion(
                             [
-                                dbc.Label([html.H3("Metric")]),
-                                dbc.RadioItems(
-                                    id="input-metric",
-                                    options=[
-                                        {"label": "Time", "value": "time"},
-                                        {"label": "Distance", "value": "distance"},
-                                    ],
-                                    value="time",
-                                    inline=True,
-                                ),
-                            ],
-                            id="radio-container",
-                        ),
-                        html.Br(),
-                        html.Div(
-                            [
-                                dbc.Label([html.H3("Method")]),
-                                dbc.RadioItems(
-                                    id="input-method",
-                                    options=[
-                                        {"label": "Driving", "value": "driving"},
-                                        {"label": "Walking", "value": "walking"},
-                                        {"label": "Biking", "value": "bicycling"},
-                                    ],
-                                    value="driving",
-                                    inline=True,
-                                ),
-                            ],
-                            id="radio-container2",
-                        ),
-                        html.Br(),
-                        html.Div(
-                            [
-                                dbc.Label([html.H3("Show converted?")]),
-                                html.Div(
+                                dbc.AccordionItem(
                                     [
-                                        dbc.Checklist(
-                                            options=[
-                                                {"label": "Show parsed", "value": 0},
+                                        html.Div(
+                                            [
+                                                dbc.Label([html.H3("Metric")]),
+                                                dbc.RadioItems(
+                                                    id="input-metric",
+                                                    options=[
+                                                        {
+                                                            "label": "Time",
+                                                            "value": "time",
+                                                        },
+                                                        {
+                                                            "label": "Distance",
+                                                            "value": "distance",
+                                                        },
+                                                    ],
+                                                    value="time",
+                                                    inline=True,
+                                                ),
                                             ],
-                                            value=[0],
-                                            id="switches-input",
-                                            switch=True,
+                                            id="radio-container",
                                         ),
                                         html.Br(),
+                                        html.Div(
+                                            [
+                                                dbc.Label([html.H3("Method")]),
+                                                dbc.RadioItems(
+                                                    id="input-method",
+                                                    options=[
+                                                        {
+                                                            "label": "Driving",
+                                                            "value": "driving",
+                                                        },
+                                                        {
+                                                            "label": "Walking",
+                                                            "value": "walking",
+                                                        },
+                                                        {
+                                                            "label": "Biking",
+                                                            "value": "bicycling",
+                                                        },
+                                                    ],
+                                                    value="driving",
+                                                    inline=True,
+                                                ),
+                                            ],
+                                            id="radio-container2",
+                                        ),
+                                        html.Br(),
+                                        html.Div(
+                                            [
+                                                dbc.Label([html.H3("Show converted?")]),
+                                                html.Div(
+                                                    [
+                                                        dbc.Checklist(
+                                                            options=[
+                                                                {
+                                                                    "label": "Show parsed",
+                                                                    "value": 0,
+                                                                },
+                                                            ],
+                                                            value=[0],
+                                                            id="switches-input",
+                                                            switch=True,
+                                                        ),
+                                                        html.Br(),
+                                                    ],
+                                                    id="toast-inner-container",
+                                                ),
+                                            ]
+                                        ),
                                     ],
-                                    id="toast-inner-container",
+                                    title="More Options",
                                 ),
-                            ]
+                            ],
                         ),
                     ],
+                    id="input-container",
                 ),
-            ],
-            id="input-container",
+            ]
         ),
         dbc.Row(
             [
