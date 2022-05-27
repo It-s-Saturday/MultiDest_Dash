@@ -62,7 +62,21 @@ def update_stops(add_clicks, remove_clicks, children):
 
 
 INTERMEDIATE_STYLE = {
+    # "font-style": "italic",
+    "color": "gray",
+    "padding": "0",
+    "margin": "0",
+}
+
+STOP_STYLE = {
+    "padding": "0",
+    "margin": "0",
+}
+
+OUTPUT_TEXT_STYLE = {
+    # "padding": "1vw",
     "font-style": "italic",
+    "margin": "1vw",
 }
 
 STORE_D = None
@@ -87,7 +101,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
     skip = False
     if n_clicks is None or "btn-calculate" not in changed_id:
         if STORE_D:
-            print("HERE")
+            # print("HERE")
             skip = True
         else:
             return no_update
@@ -156,11 +170,11 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
         using = d.best_path
 
     for i, stop in enumerate(using):
-        output.append(html.P(stop))
-
+        output.append(html.P(stop, style=STOP_STYLE))
+        
         if i < len(using) - 1:
-            print(metric)
-            metric_val = d.adj_matrix[stop][using[i + 1]]
+            # print(metric)
+            metric_val = d.adj_matrix[d.parsed_best_path[i]][d.parsed_best_path[i + 1]]
             if metric == "distance":
                 metric_suffix = "mi"
             elif metric == "time":
@@ -171,12 +185,13 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
             else:
                 metric_suffix = "?"
             output.append(
-                html.P([f"{metric_val}{metric_suffix}"], style=INTERMEDIATE_STYLE)
+                html.Pre([f"|  {metric_val}{metric_suffix}"], style=INTERMEDIATE_STYLE)
             )
 
     output.append(
         html.P(
-            f"This route is {d.cost} {'minute(s)' if metric == 'time' else 'mile(s)'} long."
+            f"This route is {d.cost} {'minute(s)' if metric == 'time' else 'mile(s)'} long.",
+            style=OUTPUT_TEXT_STYLE,
         )
     )
 
