@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
 from logic.driver import Driver
@@ -171,7 +173,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
 
     for i, stop in enumerate(using):
         output.append(html.P(stop, style=STOP_STYLE))
-        
+
         if i < len(using) - 1:
             # print(metric)
             metric_val = d.adj_matrix[d.parsed_best_path[i]][d.parsed_best_path[i + 1]]
@@ -188,9 +190,17 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
                 html.Pre([f"|  {metric_val}{metric_suffix}"], style=INTERMEDIATE_STYLE)
             )
 
+    text_metric, eta = "", ""
+    if metric == "time":
+        text_metric = "minute(s)"
+        calculated_eta = datetime.now() + timedelta(minutes=d.cost) 
+        eta = f" ETA: {calculated_eta.strftime('%H:%M')}"
+    elif metric == "distance":
+        text_metric = "mile(s)"
+
     output.append(
         html.P(
-            f"This route is {d.cost} {'minute(s)' if metric == 'time' else 'mile(s)'} long.",
+            f"This route is {d.cost} {text_metric} long.{eta}",
             style=OUTPUT_TEXT_STYLE,
         )
     )
