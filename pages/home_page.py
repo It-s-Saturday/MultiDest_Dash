@@ -49,14 +49,17 @@ layout = html.Div(
                     id="add-remove-button-container",
                 ),
                 dbc.Button("Calculate", id="btn-calculate"),
+            ]
+        ),
+        html.Div(
+            [
                 dbc.Spinner(
                     html.Div(id="output"),
                     delay_hide=100,
                     delay_show=100,
                     show_initially=False,
                 ),
-            ],
-            id="button-container",
+            ]
         ),
     ]
 )

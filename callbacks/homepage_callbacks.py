@@ -97,9 +97,13 @@ def update_output(n_clicks, origin, destination, stops, method):
                 )
             ]
         )
-    print(origin, destination, s_parsed[1:-1], "driving", method.lower())
+
     d = Driver(origin, destination, s_parsed[1:-1], "driving", method.lower())
 
+    output = []
+
+    for stop in d.best_path:
+        output.append(html.P(stop))
     return [
-        html.Div(f"Route: {d.best_path}"),
+        dbc.Toast(html.Div(output), className="mb-0", id="toast", header="Here is your path:", dismissable=True),
     ]
