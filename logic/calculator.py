@@ -11,7 +11,7 @@ def naive_tsp(valid_paths, adj_matrix, already_looked_up):
         # debug("Current path", path)
 
         for i, stop in enumerate(path[:-1]):
-            next_stop = path[i + 1] if i + 1 < len(path) else None
+            next_stop = path[i + 1] if i <= len(path) else None
             if stop not in already_looked_up:
                 raise Exception("Unhandled stop exception")
 
@@ -20,13 +20,17 @@ def naive_tsp(valid_paths, adj_matrix, already_looked_up):
             ]
 
             between = lookup(stop, next_stop)
+            # debug("Current stop", stop, "next stop", next_stop, "between", between)
 
-            if temp_cost + between > out_cost:  # temp cost exceeds out_cost prematurely
+
+            temp_cost += between
+            
+            if temp_cost > out_cost:  # temp cost exceeds out_cost prematurely
                 # debug("exceeded...going next")
                 break
-            temp_cost += between
+            
 
-        if temp_cost < out_cost and i == len(path) - 2:
+        if temp_cost < out_cost and i >= len(path) - 2:
             debug("Updating cost", out_cost, "to", temp_cost)
             out_path = path
             out_cost = temp_cost

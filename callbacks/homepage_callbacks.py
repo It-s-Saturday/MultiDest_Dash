@@ -61,6 +61,10 @@ def update_stops(add_clicks, remove_clicks, children):
         return []
 
 
+INTERMEDIATE_STYLE = {
+    "font-style": "italic",
+}
+
 STORE_D = None
 
 
@@ -151,8 +155,24 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
     else:
         using = d.best_path
 
-    for stop in using:
+    for i, stop in enumerate(using):
         output.append(html.P(stop))
+
+        if i < len(using) - 1:
+            print(metric)
+            metric_val = d.adj_matrix[stop][using[i + 1]]
+            if metric == "distance":
+                metric_suffix = "mi"
+            elif metric == "time":
+                if metric_val > 1:
+                    metric_suffix = "mins"
+                else:
+                    metric_suffix = "min"
+            else:
+                metric_suffix = "?"
+            output.append(
+                html.P([f"{metric_val}{metric_suffix}"], style=INTERMEDIATE_STYLE)
+            )
 
     output.append(
         html.P(
