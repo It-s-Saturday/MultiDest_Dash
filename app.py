@@ -20,4 +20,4 @@ app.layout = html.Div(
 print(f"render complete {round(time.time() - start, 2)}s)")
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=False)
