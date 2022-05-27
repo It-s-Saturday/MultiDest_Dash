@@ -8,7 +8,8 @@ SIDEBAR_STYLE = {
     "top": 0,
     "left": 0,
     "bottom": 0,
-    "width": "18rem",
+    "width": "13vw",
+    "min-width": "13rem",
     "padding": "2rem 1rem",
     "background-color": "#f8f9fa",
 }
@@ -16,14 +17,22 @@ SIDEBAR_STYLE = {
 # the styles for the main content position it to the right of the sidebar and
 # add some padding.
 CONTENT_STYLE = {
-    "margin-left": "18rem",
-    "margin-right": "2rem",
+    "margin-left": "10rem",
+    "margin-right": "10rem",
     "padding": "2rem 1rem",
 }
 
 sidebar = html.Div(
     [
-        html.H2("MultiDest", className="display-4"),
+        html.H2("MultiDest", className="display-6", style={"size": "2rem"}),
+        dbc.Fade(
+            html.I("by It's Saturday"),
+            id="subtitle-fade",
+            class_name="text-muted",
+            is_in=True,
+            appear=True,
+            style={"transition": "all 1.5s ease"},
+        ),
         html.Hr(),
         dbc.Nav(
             [
