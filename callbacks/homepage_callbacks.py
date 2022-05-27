@@ -62,6 +62,7 @@ def update_output(n_clicks, origin, destination, stops, method):
                 f"{f'Error: {e} ' if e else ''}Please enter a valid stop! (Stop {i+1}) "
             )
     d = Driver(origin, destination, s_parsed, "driving", method.lower())
+    
     return [
         html.Div(f"Route: {d.best_path}"),
     ]
