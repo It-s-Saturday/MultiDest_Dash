@@ -1,3 +1,4 @@
+import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
 from logic.driver import Driver
 from models import InputStore, Timer
@@ -50,19 +51,55 @@ def update_output(n_clicks, origin, destination, stops, method):
     if n_clicks is None:
         return no_update
 
-    s_parsed = []
+    alert_text = []
+    if not origin:
+        alert_text.append("origin")
+
+    if not destination:
+        alert_text.append("destination")
+
+    s_parsed = [origin, destination]
+
     for i, stop in enumerate(stops):
-        try:
-            if stop["props"]["value"] not in s_parsed:
-                s_parsed.append(stop["props"]["value"])
+        print(i, stop)
+        if "value" in stop["props"]:
+            if stop["props"]["value"] and len(stop["props"]["value"]) > 0:
+                if stop["props"]["value"] not in s_parsed:
+                    s_parsed.insert(-1, stop["props"]["value"])
+                else:
+                    return html.Div(
+                        [
+                            dbc.Alert(
+                                [
+                                    html.I(className="bi bi-info-circle-fill me-2"),
+                                    f"Duplicate stop found at stop {i + 1}",
+                                ],
+                                color="info",
+                                className="d-flex align-items-center",
+                            )
+                        ]
+                    )
             else:
-                raise Exception("Possible duplicate value")
-        except Exception as e:
-            return html.Div(
-                f"{f'Error: {e} ' if e else ''}Please enter a valid stop! (Stop {i+1}) "
-            )
-    d = Driver(origin, destination, s_parsed, "driving", method.lower())
-    
+                alert_text.append(f"stop {i + 1}")
+        else:
+            alert_text.append(f"stop {i + 1}")
+
+    if alert_text:
+        return html.Div(
+            [
+                dbc.Alert(
+                    [
+                        html.I(className="bi bi-exclamation-triangle-fill me-2"),
+                        f"Please enter {', '.join(alert_text)}",
+                    ],
+                    color="warning",
+                    className="d-flex align-items-center",
+                )
+            ]
+        )
+    print(origin, destination, s_parsed[1:-1], "driving", method.lower())
+    d = Driver(origin, destination, s_parsed[1:-1], "driving", method.lower())
+
     return [
         html.Div(f"Route: {d.best_path}"),
     ]
