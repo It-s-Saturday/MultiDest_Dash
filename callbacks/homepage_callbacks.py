@@ -215,3 +215,18 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
             style={"width": "100%"},
         ),
     ]
+
+@callback(
+    Output("url", "hash"),
+    [
+        Input("btn-calculate", "n_clicks"),
+        Input("toast", "header")
+    ],
+)
+
+def update_href(n_clicks, _):
+    if n_clicks is None:
+        return no_update
+    if n_clicks > 0:
+        return "#output"
+    return no_update
