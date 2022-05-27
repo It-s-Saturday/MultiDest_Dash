@@ -5,7 +5,7 @@ layout = html.Div(
     [
         html.Div(
             [
-                dbc.Label("Calculate"),
+                dbc.Label([html.H3("Calculate")]),
                 dbc.RadioItems(
                     id="input-metric",
                     options=[
@@ -18,18 +18,20 @@ layout = html.Div(
             ],
             id="radio-container",
         ),
+        html.Br(),
         html.Div(
             [
+                dbc.Label([html.H3("Inputs")]),
                 html.Div(
                     children=[
-                        dbc.Label("Origin"),
+                        # dbc.Label("Origin"),
                         dbc.Input(id="input-origin", type="text", placeholder="Origin"),
                         html.Hr(),
                     ]
                 ),
                 html.Div(
                     children=[
-                        dbc.Label("Stops"),
+                        # dbc.Label("Stops"),
                         html.Div(
                             id="stops",
                             children=[
@@ -46,7 +48,7 @@ layout = html.Div(
                 html.Hr(),
                 html.Div(
                     children=[
-                        dbc.Label("Destination"),
+                        # dbc.Label("Destination"),
                         dbc.Input(
                             id="input-destination",
                             type="text",
