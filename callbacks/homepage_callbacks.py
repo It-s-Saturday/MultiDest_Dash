@@ -1,3 +1,4 @@
+import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
 from logic.driver import Driver
 from models import InputStore, Timer
@@ -23,7 +24,7 @@ def update_stops(add_clicks, remove_clicks, children):
 
     if "add-stop" in changed_id:
         return children + [
-            dcc.Input(
+            dbc.Input(
                 id=f"stop_{add_clicks}", type="text", placeholder=f"Stop {stop_counter}"
             )
         ]
@@ -36,6 +37,9 @@ def update_stops(add_clicks, remove_clicks, children):
         return []
 
 
+STORE_D = None
+
+
 @callback(
     Output("output", "children"),
     [
@@ -43,26 +47,101 @@ def update_stops(add_clicks, remove_clicks, children):
         State("input-origin", "value"),
         State("input-destination", "value"),
         State("stops", "children"),
+        State("input-method", "value"),
         State("input-metric", "value"),
+        Input("switches-input", "value"),
     ],
 )
-def update_output(n_clicks, origin, destination, stops, method):
-    if n_clicks is None:
-        return no_update
+def update_output(n_clicks, origin, destination, stops, method, metric, switch):
+    global STORE_D
 
-    s_parsed = []
+    changed_id = [p["prop_id"] for p in callback_context.triggered][0]
+    skip = False
+    if n_clicks is None or "btn-calculate" not in changed_id:
+        if STORE_D:
+            print("HERE")
+            skip = True
+        else:
+            return no_update
+
+    alert_text = []
+    if not origin:
+        alert_text.append("origin")
+
+    if not destination:
+        alert_text.append("destination")
+
+    s_parsed = [origin, destination]
+
     for i, stop in enumerate(stops):
-        try:
-            if stop["props"]["value"] not in s_parsed:
-                s_parsed.append(stop["props"]["value"])
+        print(i, stop)
+        if "value" in stop["props"]:
+            if stop["props"]["value"] and len(stop["props"]["value"]) > 0:
+                if stop["props"]["value"] not in s_parsed:
+                    s_parsed.insert(-1, stop["props"]["value"])
+                else:
+                    return html.Div(
+                        children=[
+                            dbc.Alert(
+                                [
+                                    html.I(className="bi bi-info-circle-fill me-2"),
+                                    f"Duplicate stop found at stop {i + 1}",
+                                ],
+                                color="info",
+                                className="d-flex align-items-center",
+                            )
+                        ]
+                    )
             else:
-                raise Exception("Possible duplicate value")
-        except Exception as e:
-            return html.Div(
-                f"{f'Error: {e} ' if e else ''}Please enter a valid stop! (Stop {i+1}) "
-            )
-    d = Driver(origin, destination, s_parsed, "driving", method.lower())
+                alert_text.append(f"stop {i + 1}")
+        else:
+            alert_text.append(f"stop {i + 1}")
+
+    if alert_text:
+        return html.Div(
+            children=[
+                dbc.Alert(
+                    [
+                        html.I(className="bi bi-exclamation-triangle-fill me-2"),
+                        f"Please enter {', '.join(alert_text)}",
+                    ],
+                    color="warning",
+                    className="d-flex align-items-center",
+                )
+            ]
+        )
+    if not skip:
+        d = Driver(
+            origin, destination, s_parsed[1:-1], method=method, metric=metric.lower()
+        )
+
+        STORE_D = d
+
+    d = STORE_D
     
+    output = []
+
+    if switch:
+        using = d.parsed_best_path
+    else:
+        using = d.best_path
+
+    for stop in using:
+        output.append(html.P(stop))
+
+    output.append(
+        html.P(
+            f"This route is {d.cost} {'minute(s)' if metric == 'time' else 'mile(s)'} long."
+        )
+    )
+
     return [
-        html.Div(f"Route: {d.best_path}"),
+        dbc.Toast(
+            html.Div(output),
+            className="mb-0",
+            id="toast",
+            header="Here is your path:",
+            dismissable=True,
+            style={"width": "100%"},
+        ),
     ]

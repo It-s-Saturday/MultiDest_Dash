@@ -1,23 +1,25 @@
+import os
 import time
 
 import dash_bootstrap_components as dbc
 from dash import Dash, html
 
+from models.Timer import Timer
 from callbacks import homepage_callbacks, sidebar_callbacks
 from layout import CONTENT_STYLE, layout
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-print("rendering...")
-server = app.server
-start = time.time()
+with Timer("App Init") as t:
+    app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+    app.title = "MultiDest"
 
-app.layout = html.Div(
-    [
-        layout,
-    ],
-    style=CONTENT_STYLE,
-)
-print(f"render complete {round(time.time() - start, 2)}s)")
+    server = app.server
+    start = time.time()
 
+    app.layout = html.Div(
+        [
+            layout,
+        ],
+        style=CONTENT_STYLE,
+    )
 if __name__ == "__main__":
     app.run_server(debug=False)

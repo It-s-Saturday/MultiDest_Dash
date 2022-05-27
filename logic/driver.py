@@ -8,16 +8,25 @@ from logic.calculator import naive_tsp, parse_time
 
 
 class Driver:
-    def __init__(self, origin, destination, stops, method, choice):
+    def __init__(self, origin, destination, stops, method="driving", metric="time"):
         with Timer("total runtime") as total_timer:
-            self.input_store = InputStore(origin, destination, stops, method, choice)
+            self.input_store = InputStore(origin, destination, stops, method, metric)
             self.already_looked_up = {}
             self.GoogleApi = GoogleApi()
             self.valid_paths = self.build_valid_paths()
             self.adj_matrix = {}
             self.build_adj_matrix()
-            self.best_path = self.naive_tsp()
+            self.tsp = self.naive_tsp()
+            self.best_path = self.naive_tsp()[0]
+            self.cost = self.tsp[1]
+            self.parsed_best_path = self.parse_path()
             # debug("best path", self.best_path)
+
+    def parse_path(self):
+        out = []
+        for position in self.best_path:
+            out.append(self.already_looked_up[position])
+        return out
 
     def naive_tsp(self):
         with Timer("naive tsp") as naive_timer:
