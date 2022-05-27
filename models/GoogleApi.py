@@ -1,4 +1,5 @@
 import os
+import string
 
 import googlemaps
 import requests
@@ -46,3 +47,28 @@ class GoogleApi:
             name = r.json()["destination_addresses"][0]
 
             return name
+
+class Map(GoogleApi):
+    def __init__(self, stops):
+        GoogleApi.__init__(self)
+        self.stops = stops
+        self.marker_color = "blue"
+        self.size = "400x400"
+        self.path_color = "0xff0000ff"
+        self.path_weight = "5"
+        self.map_type = "terrain" #roadmap, satellite, terrain, or hybrid
+        
+    def get_map(self):
+        url = f"https://maps.googleapis.com/maps/api/staticmap?size={self.size}&maptype={self.map_type}"
+        marker_info = "" # customizes the markers on the map
+        path_info = f"color:{self.path_color}|weight:{self.path_weight}" # customizes the path drawn on map
+        letters = list(string.ascii_uppercase)
+        for i, stop in enumerate(self.stops): # adding stops for markers and path
+            clean_stop = stop.replace(" ", "+")
+            marker_info += f"&markers=color:{self.marker_color}%7Clabel:{letters[i]}%7C{clean_stop}"
+            path_info += f"|{clean_stop}"
+    
+        concat = f"{marker_info}&path={path_info}&key={self.api_key}"
+        url += concat
+        print(url)
+        return url

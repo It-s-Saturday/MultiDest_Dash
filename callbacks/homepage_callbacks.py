@@ -1,5 +1,6 @@
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
 from logic.driver import Driver
+from models.GoogleApi import Map
 from models import InputStore, Timer
 
 stop_counter = 0
@@ -62,7 +63,9 @@ def update_output(n_clicks, origin, destination, stops, method):
                 f"{f'Error: {e} ' if e else ''}Please enter a valid stop! (Stop {i+1}) "
             )
     d = Driver(origin, destination, s_parsed, "driving", method.lower())
+    m = Map([origin] + d.input_store.stops + [destination])
     
     return [
         html.Div(f"Route: {d.best_path}"),
+        html.Img(src=m.get_map())
     ]
