@@ -111,5 +111,6 @@ def update_output(n_clicks, origin, destination, stops, method):
             id="toast",
             header="Here is your path:",
             dismissable=True,
+            style={"width": "100%"},
         ),
     ]
