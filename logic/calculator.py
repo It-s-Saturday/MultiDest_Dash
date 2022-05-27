@@ -2,7 +2,7 @@ import math
 from logic.helpers import debug
 
 
-def naive_tsp(self, valid_paths, adj_matrix, already_looked_up):
+def naive_tsp(valid_paths, adj_matrix, already_looked_up):
     out_path = []
     out_cost = math.inf
 
@@ -34,7 +34,7 @@ def naive_tsp(self, valid_paths, adj_matrix, already_looked_up):
     return out_path
 
 
-def parse_time(self, str):
+def parse_time(str):
     """Return minutes version from string containing days, hours, minutes"""
     lst = str.split(" ")
     time = 0
