@@ -24,7 +24,7 @@ Div = html.Div(
 )
 
 image_filename = os.getcwd() + "/pages/AM.png"  # replace with your own image
-print(image_filename)
+# print(image_filename)
 
 
 def b64_image(image_filename):

@@ -21,20 +21,39 @@ layout = html.Div(
         html.Div(
             [
                 html.Div(
-                    [
+                    children=[
                         dbc.Label("Origin"),
                         dbc.Input(id="input-origin", type="text", placeholder="Origin"),
+                        html.Hr(),
                     ]
                 ),
                 html.Div(
-                    id="stops",
                     children=[
-                        dbc.Input(id="stop-1", type="text", placeholder="Stop 1"),
-                        dbc.Input(id="stop-2", type="text", placeholder="Stop 2"),
-                    ],
+                        dbc.Label("Stops"),
+                        html.Div(
+                            id="stops",
+                            children=[
+                                dbc.Input(
+                                    id="stop-1", type="text", placeholder="Stop 1"
+                                ),
+                                dbc.Input(
+                                    id="stop-2", type="text", placeholder="Stop 2"
+                                ),
+                            ],
+                        ),
+                    ]
                 ),
-                dbc.Input(
-                    id="input-destination", type="text", placeholder="Destination"
+                html.Hr(),
+                html.Div(
+                    children=[
+                        dbc.Label("Destination"),
+                        dbc.Input(
+                            id="input-destination",
+                            type="text",
+                            placeholder="Destination",
+                        ),
+                        html.Br(),
+                    ]
                 ),
             ],
             id="input-container",
@@ -42,7 +61,7 @@ layout = html.Div(
         html.Div(
             [
                 html.Div(
-                    [
+                    children=[
                         dbc.Button("Add stop", color="secondary", id="add-stop"),
                         dbc.Button("Remove Stop", color="secondary", id="remove-stop"),
                     ],

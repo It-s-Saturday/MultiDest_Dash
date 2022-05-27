@@ -68,7 +68,7 @@ def update_output(n_clicks, origin, destination, stops, method):
                     s_parsed.insert(-1, stop["props"]["value"])
                 else:
                     return html.Div(
-                        [
+                        children=[
                             dbc.Alert(
                                 [
                                     html.I(className="bi bi-info-circle-fill me-2"),
@@ -86,7 +86,7 @@ def update_output(n_clicks, origin, destination, stops, method):
 
     if alert_text:
         return html.Div(
-            [
+            children=[
                 dbc.Alert(
                     [
                         html.I(className="bi bi-exclamation-triangle-fill me-2"),
@@ -105,5 +105,11 @@ def update_output(n_clicks, origin, destination, stops, method):
     for stop in d.best_path:
         output.append(html.P(stop))
     return [
-        dbc.Toast(html.Div(output), className="mb-0", id="toast", header="Here is your path:", dismissable=True),
+        dbc.Toast(
+            html.Div(output),
+            className="mb-0",
+            id="toast",
+            header="Here is your path:",
+            dismissable=True,
+        ),
     ]
