@@ -36,7 +36,9 @@ def update_stops(add_clicks, remove_clicks, children):
     else:
         return []
 
+
 STORE_D = None
+
 
 @callback(
     Output("output", "children"),
@@ -51,8 +53,16 @@ STORE_D = None
     ],
 )
 def update_output(n_clicks, origin, destination, stops, method, metric, switch):
-    if n_clicks is None:
-        return no_update
+    global STORE_D
+
+    changed_id = [p["prop_id"] for p in callback_context.triggered][0]
+    skip = False
+    if n_clicks is None or "btn-calculate" not in changed_id:
+        if STORE_D:
+            print("HERE")
+            skip = True
+        else:
+            return no_update
 
     alert_text = []
     if not origin:
@@ -100,20 +110,22 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
                 )
             ]
         )
+    if not skip:
+        d = Driver(
+            origin, destination, s_parsed[1:-1], method=method, metric=metric.lower()
+        )
 
-    d = Driver(
-        origin, destination, s_parsed[1:-1], method=method, metric=metric.lower()
-    )
+        STORE_D = d
 
-    STORE_D = d
+    d = STORE_D
     
     output = []
-    
+
     if switch:
         using = d.parsed_best_path
     else:
         using = d.best_path
-    
+
     for stop in using:
         output.append(html.P(stop))
 
