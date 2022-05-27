@@ -1,12 +1,16 @@
 import os
+
 import googlemaps
 import requests
+from logic.helpers import debug
+
 from models.Timer import Timer
 
-if os.path.exists('./models/secret.py'):
+if os.path.exists("./models/secret.py"):
     from .secret import *
 else:
-    API_KEY = os.environ['API_KEY']
+    API_KEY = os.environ["API_KEY"]
+
 
 class GoogleApi:
     def __init__(self):
@@ -19,6 +23,7 @@ class GoogleApi:
         destination_in)"""
         with Timer("google api lookup") as lookup_timer:
             # print("Start lookup:", origin_in, destination_`in, "with", mode, choice)
+            # debug(origin_in, destination_in)
             origin = origin_in.replace(" ", "+")
             destination = destination_in.replace(" ", "+")
             url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&"

@@ -1,4 +1,4 @@
-_debug = False
+_debug = True
 
 
 def stars():

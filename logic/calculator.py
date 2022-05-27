@@ -13,7 +13,7 @@ class Calculator:
 
         for path in valid_paths:
             temp_cost = 0
-            debug("Current path", path)
+            #debug("Current path", path)
 
             for i, stop in enumerate(path[:-1]):
                 next_stop = path[i + 1] if i + 1 < len(path) else None
@@ -29,12 +29,12 @@ class Calculator:
                 if (
                     temp_cost + between > out_cost
                 ):  # temp cost exceeds out_cost prematurely
-                    debug("exceeded...going next")
+                    #debug("exceeded...going next")
                     break
                 temp_cost += between
 
             if temp_cost < out_cost:
-                debug("Updating cost", out_cost, "to", temp_cost)
+                #debug("Updating cost", out_cost, "to", temp_cost)
                 out_path = path
                 out_cost = temp_cost
 
@@ -71,4 +71,4 @@ if __name__ == "__main__":
     assert c.parse_time("1 day, 1 hour, 1 min") == 1501
     assert c.parse_time("2 days, 2 hours, 2 mins") == 3002
     assert c.parse_time("1 day, 3 hours") == 1620
-    debug("All tests passed")
+    #debug("All tests passed")
