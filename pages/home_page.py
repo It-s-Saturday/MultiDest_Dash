@@ -76,6 +76,8 @@ layout = html.Div(
                 ),
                 dbc.Col(
                     [
+                        # html.Br(),
+                        # html.Br(),
                         html.Div(
                             [
                                 dbc.Label([html.H3("Metric")]),
@@ -86,13 +88,49 @@ layout = html.Div(
                                         {"label": "Distance", "value": "distance"},
                                     ],
                                     value="time",
-                                    # inline=True,
+                                    inline=True,
                                 ),
                             ],
                             id="radio-container",
                         ),
                         html.Br(),
-                    ]
+                        html.Div(
+                            [
+                                dbc.Label([html.H3("Method")]),
+                                dbc.RadioItems(
+                                    id="input-method",
+                                    options=[
+                                        {"label": "Driving", "value": "driving"},
+                                        {"label": "Walking", "value": "walking"},
+                                        {"label": "Biking", "value": "bicycling"},
+                                    ],
+                                    value="driving",
+                                    inline=True,
+                                ),
+                            ],
+                            id="radio-container2",
+                        ),
+                        html.Br(),
+                        html.Div(
+                            [
+                                dbc.Label([html.H3("Show converted?")]),
+                                html.Div(
+                                    [
+                                        dbc.Checklist(
+                                            options=[
+                                                {"label": "Show parsed", "value": 0},
+                                            ],
+                                            value=[0],
+                                            id="switches-input",
+                                            switch=True,
+                                        ),
+                                        html.Br(),
+                                    ],
+                                    id="toast-inner-container",
+                                ),
+                            ]
+                        ),
+                    ],
                 ),
             ],
             id="input-container",

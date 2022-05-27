@@ -8,7 +8,8 @@ SIDEBAR_STYLE = {
     "top": 0,
     "left": 0,
     "bottom": 0,
-    "width": "18rem",
+    "width": "13vw",
+    "min-width": "13rem",
     "padding": "2rem 1rem",
     "background-color": "#f8f9fa",
 }
@@ -23,7 +24,7 @@ CONTENT_STYLE = {
 
 sidebar = html.Div(
     [
-        html.H2("MultiDest", className="display-4"),
+        html.H2("MultiDest", className="display-6", style={"size": "2rem"}),
         dbc.Fade(
             html.I("by It's Saturday"),
             id="subtitle-fade",

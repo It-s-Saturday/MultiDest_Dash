@@ -31,7 +31,7 @@ def naive_tsp(valid_paths, adj_matrix, already_looked_up):
             out_path = path
             out_cost = temp_cost
 
-    return out_path
+    return [out_path, out_cost]
 
 
 def parse_time(str):

@@ -36,6 +36,7 @@ def update_stops(add_clicks, remove_clicks, children):
     else:
         return []
 
+STORE_D = None
 
 @callback(
     Output("output", "children"),
@@ -44,10 +45,12 @@ def update_stops(add_clicks, remove_clicks, children):
         State("input-origin", "value"),
         State("input-destination", "value"),
         State("stops", "children"),
+        State("input-method", "value"),
         State("input-metric", "value"),
+        Input("switches-input", "value"),
     ],
 )
-def update_output(n_clicks, origin, destination, stops, method):
+def update_output(n_clicks, origin, destination, stops, method, metric, switch):
     if n_clicks is None:
         return no_update
 
@@ -98,12 +101,28 @@ def update_output(n_clicks, origin, destination, stops, method):
             ]
         )
 
-    d = Driver(origin, destination, s_parsed[1:-1], "driving", method.lower())
+    d = Driver(
+        origin, destination, s_parsed[1:-1], method=method, metric=metric.lower()
+    )
 
+    STORE_D = d
+    
     output = []
-
-    for stop in d.best_path:
+    
+    if switch:
+        using = d.parsed_best_path
+    else:
+        using = d.best_path
+    
+    for stop in using:
         output.append(html.P(stop))
+
+    output.append(
+        html.P(
+            f"This route is {d.cost} {'minute(s)' if metric == 'time' else 'mile(s)'} long."
+        )
+    )
+
     return [
         dbc.Toast(
             html.Div(output),
