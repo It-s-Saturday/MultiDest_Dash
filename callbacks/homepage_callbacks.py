@@ -24,7 +24,7 @@ def update_stops(add_clicks, remove_clicks, children):
 
     if "add-stop" in changed_id:
         return children + [
-            dcc.Input(
+            dbc.Input(
                 id=f"stop_{add_clicks}", type="text", placeholder=f"Stop {stop_counter}"
             )
         ]

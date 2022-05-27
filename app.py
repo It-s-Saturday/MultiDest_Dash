@@ -1,3 +1,4 @@
+import os
 import time
 
 import dash_bootstrap_components as dbc
@@ -7,6 +8,8 @@ from callbacks import homepage_callbacks, sidebar_callbacks
 from layout import CONTENT_STYLE, layout
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.title = "MultiDest"
+
 print("rendering...")
 server = app.server
 start = time.time()

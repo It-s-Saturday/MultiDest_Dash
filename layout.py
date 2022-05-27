@@ -24,6 +24,14 @@ CONTENT_STYLE = {
 sidebar = html.Div(
     [
         html.H2("MultiDest", className="display-4"),
+        dbc.Fade(
+            html.I("by It's Saturday"),
+            id="subtitle-fade",
+            class_name="text-muted",
+            is_in=True,
+            appear=True,
+            style={"transition": "all 1.5s ease"},
+        ),
         html.Hr(),
         dbc.Nav(
             [
