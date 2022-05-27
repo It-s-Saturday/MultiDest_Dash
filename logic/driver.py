@@ -17,8 +17,11 @@ class Driver:
             self.adj_matrix = {}
             self.build_adj_matrix()
             self.tsp = self.naive_tsp()
-            self.best_path = self.naive_tsp()[0]
+            debug("tsp", self.tsp)
+            self.best_path = self.tsp[0]
+            debug("best path", self.best_path)
             self.cost = self.tsp[1]
+            debug("cost", self.cost)
             self.parsed_best_path = self.parse_path()
             # debug("best path", self.best_path)
 

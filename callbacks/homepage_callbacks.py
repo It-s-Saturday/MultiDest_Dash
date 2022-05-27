@@ -7,7 +7,10 @@ stop_counter = 0
 
 
 @callback(
-    Output("stops", "children"),
+    [
+        Output("stops", "children"),
+        Output("alert-container", "children"),
+    ],
     [
         Input("add-stop", "n_clicks"),
         Input("remove-stop", "n_clicks"),
@@ -16,23 +19,44 @@ stop_counter = 0
 )
 def update_stops(add_clicks, remove_clicks, children):
     if add_clicks is None and remove_clicks is None:
-        return no_update
+        return no_update, no_update
 
     stop_counter = len(children) + 1
 
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
     if "add-stop" in changed_id:
-        return children + [
-            dbc.Input(
-                id=f"stop_{add_clicks}", type="text", placeholder=f"Stop {stop_counter}"
+        if len(children) > 9:
+            return children, dbc.Alert(
+                "Algorithm not optimized for more than 10 stops!",
+                color="warning",
+                is_open=True,
+                duration=2000,
             )
-        ]
+        return (
+            (
+                children
+                + [
+                    dbc.Input(
+                        id=f"stop_{add_clicks}",
+                        type="text",
+                        placeholder=f"Stop {stop_counter}",
+                    )
+                ]
+            ),
+            no_update,
+        )
+
     elif "remove-stop" in changed_id:
         if len(children) > 2:
             children.pop()
-            return children
-        return children
+            return children, no_update
+        return children, dbc.Alert(
+            "You must have at least 2 stops",
+            color="info",
+            is_open=True,
+            duration=2000,
+        )
     else:
         return []
 
@@ -74,7 +98,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
     s_parsed = [origin, destination]
 
     for i, stop in enumerate(stops):
-        print(i, stop)
+        # print(i, stop)
         if "value" in stop["props"]:
             if stop["props"]["value"] and len(stop["props"]["value"]) > 0:
                 if stop["props"]["value"] not in s_parsed:
@@ -107,6 +131,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
                     ],
                     color="warning",
                     className="d-flex align-items-center",
+                    duration=2000,
                 )
             ]
         )
@@ -118,7 +143,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
         STORE_D = d
 
     d = STORE_D
-    
+
     output = []
 
     if switch:

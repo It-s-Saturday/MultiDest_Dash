@@ -26,8 +26,8 @@ def naive_tsp(valid_paths, adj_matrix, already_looked_up):
                 break
             temp_cost += between
 
-        if temp_cost < out_cost:
-            # debug("Updating cost", out_cost, "to", temp_cost)
+        if temp_cost < out_cost and i == len(path) - 2:
+            debug("Updating cost", out_cost, "to", temp_cost)
             out_path = path
             out_cost = temp_cost
 
