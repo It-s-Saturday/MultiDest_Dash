@@ -4,7 +4,7 @@ from models.GoogleApi import GoogleApi
 from models.InputStore import InputStore
 from models.Timer import Timer
 from logic.helpers import debug
-from logic.calculator import Calculator
+from logic.calculator import naive_tsp, parse_time
 
 
 class Driver:
@@ -13,18 +13,15 @@ class Driver:
             self.input_store = InputStore(origin, destination, stops, method, choice)
             self.already_looked_up = {}
             self.GoogleApi = GoogleApi()
-            self.Calculator = Calculator()
             self.valid_paths = self.build_valid_paths()
             self.adj_matrix = {}
             self.build_adj_matrix()
             self.best_path = self.naive_tsp()
-            #debug("best path", self.best_path)
+            # debug("best path", self.best_path)
 
     def naive_tsp(self):
         with Timer("naive tsp") as naive_timer:
-            return self.Calculator.naive_tsp(
-                self.valid_paths, self.adj_matrix, self.already_looked_up
-            )
+            return naive_tsp(self.valid_paths, self.adj_matrix, self.already_looked_up)
 
     def build_valid_paths(self):
         intermediates = permutations(self.input_store.stops)
@@ -49,7 +46,7 @@ class Driver:
                         and i_dest == self.input_store.destination
                     ):
                         continue
-                    lookup = self.Calculator.parse_time(self.lookup(i_origin, i_dest))
+                    lookup = parse_time(self.lookup(i_origin, i_dest))
                     converted_origin = self.already_looked_up[i_origin]
                     converted_dest = self.already_looked_up[i_dest]
                     if converted_origin not in self.adj_matrix:
@@ -66,7 +63,7 @@ class Driver:
             stored_b = self.already_looked_up[b]
             # debug("optimized", stored_a, stored_b, self.adj_matrix[stored_a][stored_b])
             return self.adj_matrix[stored_a][stored_b]
-        
+
         except:
             to_lookup = []
             if a not in self.already_looked_up:
