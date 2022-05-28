@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
 from logic.driver import Driver
@@ -7,7 +9,10 @@ stop_counter = 0
 
 
 @callback(
-    Output("stops", "children"),
+    [
+        Output("stops", "children"),
+        Output("alert-container", "children"),
+    ],
     [
         Input("add-stop", "n_clicks"),
         Input("remove-stop", "n_clicks"),
@@ -16,26 +21,65 @@ stop_counter = 0
 )
 def update_stops(add_clicks, remove_clicks, children):
     if add_clicks is None and remove_clicks is None:
-        return no_update
+        return no_update, no_update
 
     stop_counter = len(children) + 1
 
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
     if "add-stop" in changed_id:
-        return children + [
-            dbc.Input(
-                id=f"stop_{add_clicks}", type="text", placeholder=f"Stop {stop_counter}"
+        if len(children) > 9:
+            return children, dbc.Alert(
+                "Algorithm not optimized for more than 10 stops!",
+                color="warning",
+                is_open=True,
+                duration=2000,
             )
-        ]
+        return (
+            (
+                children
+                + [
+                    dbc.Input(
+                        id=f"stop_{add_clicks}",
+                        type="text",
+                        placeholder=f"Stop {stop_counter}",
+                    )
+                ]
+            ),
+            no_update,
+        )
+
     elif "remove-stop" in changed_id:
         if len(children) > 2:
             children.pop()
-            return children
-        return children
+            return children, no_update
+        return children, dbc.Alert(
+            "You must have at least 2 stops",
+            color="info",
+            is_open=True,
+            duration=2000,
+        )
     else:
         return []
 
+
+INTERMEDIATE_STYLE = {
+    # "font-style": "italic",
+    "color": "gray",
+    "padding": "0",
+    "margin": "0",
+}
+
+STOP_STYLE = {
+    "padding": "0",
+    "margin": "0",
+}
+
+OUTPUT_TEXT_STYLE = {
+    # "padding": "1vw",
+    "font-style": "italic",
+    "margin": "1vw",
+}
 
 STORE_D = None
 
@@ -59,7 +103,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
     skip = False
     if n_clicks is None or "btn-calculate" not in changed_id:
         if STORE_D:
-            print("HERE")
+            # print("HERE")
             skip = True
         else:
             return no_update
@@ -74,7 +118,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
     s_parsed = [origin, destination]
 
     for i, stop in enumerate(stops):
-        print(i, stop)
+        # print(i, stop)
         if "value" in stop["props"]:
             if stop["props"]["value"] and len(stop["props"]["value"]) > 0:
                 if stop["props"]["value"] not in s_parsed:
@@ -107,6 +151,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
                     ],
                     color="warning",
                     className="d-flex align-items-center",
+                    duration=2000,
                 )
             ]
         )
@@ -118,7 +163,7 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
         STORE_D = d
 
     d = STORE_D
-    
+
     output = []
 
     if switch:
@@ -126,12 +171,37 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
     else:
         using = d.best_path
 
-    for stop in using:
-        output.append(html.P(stop))
+    for i, stop in enumerate(using):
+        output.append(html.P(stop, style=STOP_STYLE))
+
+        if i < len(using) - 1:
+            # print(metric)
+            metric_val = d.adj_matrix[d.parsed_best_path[i]][d.parsed_best_path[i + 1]]
+            if metric == "distance":
+                metric_suffix = "mi"
+            elif metric == "time":
+                if metric_val > 1:
+                    metric_suffix = "mins"
+                else:
+                    metric_suffix = "min"
+            else:
+                metric_suffix = "?"
+            output.append(
+                html.Pre([f"|  {metric_val}{metric_suffix}"], style=INTERMEDIATE_STYLE)
+            )
+
+    text_metric, eta = "", ""
+    if metric == "time":
+        text_metric = "minute(s)"
+        calculated_eta = datetime.now() + timedelta(minutes=d.cost) 
+        eta = f" ETA: {calculated_eta.strftime('%H:%M')}"
+    elif metric == "distance":
+        text_metric = "mile(s)"
 
     output.append(
         html.P(
-            f"This route is {d.cost} {'minute(s)' if metric == 'time' else 'mile(s)'} long."
+            f"This route is {d.cost} {text_metric} long.{eta}",
+            style=OUTPUT_TEXT_STYLE,
         )
     )
 

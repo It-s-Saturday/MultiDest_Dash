@@ -171,6 +171,7 @@ layout = html.Div(
                         ),
                     ]
                 ),
+                html.Div(id="alert-container"),
                 html.Div(
                     [
                         dbc.Spinner(

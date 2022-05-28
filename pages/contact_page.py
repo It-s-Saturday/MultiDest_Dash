@@ -6,7 +6,7 @@ layout = html.Div(
         html.Div(
             [
                 html.Div(
-                    children="Contact Us",
+                    ["Contact Us"],
                     style={
                         "color": "steelblue",
                         "font-weight": "bold",
@@ -20,39 +20,29 @@ layout = html.Div(
             ],
             style={"text-align": "center"},
         ),
-        # EMAIL
+        # LinkedIn
         html.Div(
             [
-                html.H4(children="Email:", style={"font-weight": "bold"}),
-                html.H6(children="its-saturday@gmail.com"),
-                html.Br(),
-            ]
-        ),
-        # GITHUB LINK
-        html.Div(
-            [
-                html.H4(children="Github:", style={"font-weight": "bold"}),
-                html.A(
-                    "Our code is open source. Check it out here!",
-                    href="https://github.com/It-s-Saturday/MultiDest_Dash",
+                html.H4(children="LinkedIn:", style={"font-weight": "bold"}),
+                dcc.Link(
+                    ["https://www.linkedin.com/company/it-s-saturday/"],
+                    href="https://www.linkedin.com/company/it-s-saturday/",
                     target="_blank",
                 ),
                 html.Br(),
             ]
         ),
-        # FAQ
+        html.Br(),
+        # GITHUB LINK
         html.Div(
             [
+                html.H4(children="Github:", style={"font-weight": "bold"}),
+                dcc.Link(
+                    ["https://github.com/It-s-Saturday/MultiDest_Dash"],
+                    href="https://github.com/It-s-Saturday/MultiDest_Dash",
+                    target="_blank",
+                ),
                 html.Br(),
-                html.H4(children="FAQ:", style={"font-weight": "bold"}),
-                html.H6(
-                    children="Is there a limit on how many stops can be added?",
-                    style={"color": "steelblue", "font-weight": "bold"},
-                ),
-                html.H6(
-                    children="No, you can add as much stops as you like!",
-                    style={"font-style": "italic"},
-                ),
             ]
         ),
     ]
