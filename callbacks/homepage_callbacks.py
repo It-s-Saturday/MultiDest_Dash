@@ -7,7 +7,6 @@ from models import InputStore, Timer
 
 stop_counter = 0
 
-
 @callback(
     [
         Output("stops", "children"),
@@ -112,9 +111,14 @@ OUTPUT_TEXT_STYLE = {
         State("store", "data"),
     ],
 )
+
 def update_output(
     n_clicks, origin, destination, stops, method, metric, switched, store_in
 ):
+
+    original_method = method
+    original_metric = metric
+
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
     if n_clicks is None or "btn-calculate" not in changed_id:
         if "switches-input" in changed_id:
@@ -250,3 +254,22 @@ def update_href(n_clicks, _):
     if n_clicks > 0:
         return "#output"
     return no_update
+
+@callback(
+    Output("recalculate-alert", "children"),
+    [
+        Input("input-method", "value"),
+        Input("input-metric", "value"),
+        Input("url", "hash")
+    ]
+)
+def update_alerts(method, metric, hash):
+    if hash == "#output":
+        changed_id = [p['prop_id'] for p in callback_context.triggered][0]
+        print(changed_id)
+        if not changed_id:
+            return None
+        if changed_id == "input-metric.value" or changed_id == "input_method.value":
+            return dbc.Alert("You must recalculate to see changes.", color="info", duration=3000)
+    else:
+        return None
