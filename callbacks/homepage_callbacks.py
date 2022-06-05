@@ -6,8 +6,6 @@ from logic.driver import Driver
 from models import InputStore, Timer
 
 stop_counter = 0
-original_metric = "distance"
-original_method = "driving"
 
 @callback(
     [
@@ -117,8 +115,6 @@ OUTPUT_TEXT_STYLE = {
 def update_output(
     n_clicks, origin, destination, stops, method, metric, switched, store_in
 ):
-    global original_metric
-    global original_method
 
     original_method = method
     original_metric = metric
@@ -269,9 +265,11 @@ def update_href(n_clicks, _):
 )
 def update_alerts(method, metric, hash):
     if hash == "#output":
-        if metric != original_metric or method != original_method:
-            return dbc.Alert("You must recalculate to see changes.", color="info")
-        else:
+        changed_id = [p['prop_id'] for p in callback_context.triggered][0]
+        print(changed_id)
+        if not changed_id:
             return None
+        if changed_id == "input-metric.value" or changed_id == "input_method.value":
+            return dbc.Alert("You must recalculate to see changes.", color="info", duration=3000)
     else:
         return None
