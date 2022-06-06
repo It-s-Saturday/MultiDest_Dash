@@ -81,11 +81,26 @@ OUTPUT_TEXT_STYLE = {
     "margin": "1vw",
 }
 
-STORE_D = None
+
+# @callback(
+#     Output("output", "children"),
+#     [Input("switches-input", "value"), State("store", "data")],
+# )
+# def switch_between_user_and_parsed(switched, store):
+#     if not store or len(store) != 2:
+#         return dash.no_update
+
+#     if switched:
+#         return store["parsed_output"]
+
+#     return store["user_input"]
 
 
 @callback(
-    Output("output", "children"),
+    [
+        Output("output", "children"),
+        Output("store", "data"),
+    ],
     [
         Input("btn-calculate", "n_clicks"),
         State("input-origin", "value"),
@@ -94,19 +109,20 @@ STORE_D = None
         State("input-method", "value"),
         State("input-metric", "value"),
         Input("switches-input", "value"),
+        State("store", "data"),
     ],
 )
-def update_output(n_clicks, origin, destination, stops, method, metric, switch):
-    global STORE_D
-
+def update_output(
+    n_clicks, origin, destination, stops, method, metric, switched, store_in
+):
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
-    skip = False
     if n_clicks is None or "btn-calculate" not in changed_id:
-        if STORE_D:
-            # print("HERE")
-            skip = True
-        else:
-            return no_update
+        if "switches-input" in changed_id:
+            if switched:
+                return store_in["parsed_input"], store_in
+            return store_in["user_input"], store_in
+
+        return no_update
 
     alert_text = []
     if not origin:
@@ -155,55 +171,61 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
                 )
             ]
         )
-    if not skip:
-        d = Driver(
-            origin, destination, s_parsed[1:-1], method=method, metric=metric.lower()
-        )
 
-        STORE_D = d
-
-    d = STORE_D
-
-    output = []
-
-    if switch:
-        using = d.parsed_best_path
-    else:
-        using = d.best_path
-
-    for i, stop in enumerate(using):
-        output.append(html.P(stop, style=STOP_STYLE))
-
-        if i < len(using) - 1:
-            # print(metric)
-            metric_val = d.adj_matrix[d.parsed_best_path[i]][d.parsed_best_path[i + 1]]
-            if metric == "distance":
-                metric_suffix = "mi"
-            elif metric == "time":
-                if metric_val > 1:
-                    metric_suffix = "mins"
-                else:
-                    metric_suffix = "min"
-            else:
-                metric_suffix = "?"
-            output.append(
-                html.Pre([f"|  {metric_val}{metric_suffix}"], style=INTERMEDIATE_STYLE)
-            )
-
-    text_metric, eta = "", ""
-    if metric == "time":
-        text_metric = "minute(s)"
-        calculated_eta = datetime.now() + timedelta(minutes=d.cost) 
-        eta = f" ETA: {calculated_eta.strftime('%H:%M')}"
-    elif metric == "distance":
-        text_metric = "mile(s)"
-
-    output.append(
-        html.P(
-            f"This route is {d.cost} {text_metric} long.{eta}",
-            style=OUTPUT_TEXT_STYLE,
-        )
+    d = Driver(
+        origin, destination, s_parsed[1:-1], method=method, metric=metric.lower()
     )
+
+    def create_output(using):
+        output = []
+        for i, stop in enumerate(using):
+            output.append(html.P(stop, style=STOP_STYLE))
+
+            if i < len(using) - 1:
+                # print(metric)
+                metric_val = d.adj_matrix[d.parsed_best_path[i]][
+                    d.parsed_best_path[i + 1]
+                ]
+                if metric == "distance":
+                    metric_suffix = "mi"
+                elif metric == "time":
+                    if metric_val > 1:
+                        metric_suffix = "mins"
+                    else:
+                        metric_suffix = "min"
+                else:
+                    metric_suffix = "?"
+                output.append(
+                    html.Pre(
+                        [f"|  {metric_val}{metric_suffix}"], style=INTERMEDIATE_STYLE
+                    )
+                )
+        text_metric, eta = "", ""
+        if metric == "time":
+            text_metric = "minute(s)"
+            calculated_eta = datetime.now() + timedelta(minutes=d.cost)
+            eta = f" ETA: {calculated_eta.strftime('%H:%M')}"
+        elif metric == "distance":
+            text_metric = "mile(s)"
+
+        output.append(
+            html.P(
+                f"This route is {d.cost} {text_metric} long.{eta}",
+                style=OUTPUT_TEXT_STYLE,
+            )
+        )
+
+        return output
+
+    store = {
+        "user_input": create_output(d.best_path),
+        "parsed_input": create_output(d.parsed_best_path),
+    }
+
+    if switched:
+        output = store["parsed_input"]
+    else:
+        output = store["user_input"]
 
     return [
         dbc.Toast(
@@ -214,4 +236,5 @@ def update_output(n_clicks, origin, destination, stops, method, metric, switch):
             dismissable=True,
             style={"width": "100%"},
         ),
+        store,
     ]
