@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 
 layout = html.Div(
     [
+        dcc.Store(id="store", storage_type="session"),
         dbc.Row(
             [
                 dbc.Col(
