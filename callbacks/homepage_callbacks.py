@@ -239,14 +239,11 @@ def update_output(
         store,
     ]
 
+
 @callback(
     Output("url", "hash"),
-    [
-        Input("btn-calculate", "n_clicks"),
-        Input("toast", "header")
-    ],
+    [Input("btn-calculate", "n_clicks"), Input("toast", "header")],
 )
-
 def update_href(n_clicks, _):
     if n_clicks is None:
         return no_update
