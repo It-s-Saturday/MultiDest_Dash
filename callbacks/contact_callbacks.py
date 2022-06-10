@@ -2,8 +2,14 @@ import re
 
 import dash_bootstrap_components as dbc
 import yagmail
+import os
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
-from models.secret import PASSWORD, USERNAME
+
+if os.path.exists("./models/secret.py"):
+    from models.secret import *
+else:
+    PASSWORD = os.environ["PASSWORD"]
+    USERNAME = os.environ["USERNAME"]
 
 regex = re.compile(r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+")
 
