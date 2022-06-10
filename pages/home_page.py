@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 layout = html.Div(
     [
         dcc.Store(id="store", storage_type="session"),
+        html.Div(id="recalculate-alert", children=[]),
         dbc.Row(
             [
                 dbc.Col(
@@ -91,14 +92,14 @@ layout = html.Div(
                                                     options=[
                                                         {
                                                             "label": "Time",
-                                                            "value": "time",
+                                                            "value": "duration",
                                                         },
                                                         {
                                                             "label": "Distance",
                                                             "value": "distance",
                                                         },
                                                     ],
-                                                    value="time",
+                                                    value="duration",
                                                     inline=True,
                                                 ),
                                             ],

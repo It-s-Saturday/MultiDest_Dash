@@ -115,14 +115,18 @@ OUTPUT_TEXT_STYLE = {
 def update_output(
     n_clicks, origin, destination, stops, method, metric, switched, store_in
 ):
+
+    original_method = method
+    original_metric = metric
+
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
-    if n_clicks is None or "btn-calculate" not in changed_id:
+    if "btn-calculate" not in changed_id:
         if "switches-input" in changed_id:
             if switched:
                 return store_in["parsed_input"], store_in
             return store_in["user_input"], store_in
 
-        return no_update
+        return no_update, no_update
 
     alert_text = []
     if not origin:
@@ -140,17 +144,20 @@ def update_output(
                 if stop["props"]["value"] not in s_parsed:
                     s_parsed.insert(-1, stop["props"]["value"])
                 else:
-                    return html.Div(
-                        children=[
-                            dbc.Alert(
-                                [
-                                    html.I(className="bi bi-info-circle-fill me-2"),
-                                    f"Duplicate stop found at stop {i + 1}",
-                                ],
-                                color="info",
-                                className="d-flex align-items-center",
-                            )
-                        ]
+                    return (
+                        html.Div(
+                            children=[
+                                dbc.Alert(
+                                    [
+                                        html.I(className="bi bi-info-circle-fill me-2"),
+                                        f"Duplicate stop found at stop {i + 1}",
+                                    ],
+                                    color="info",
+                                    className="d-flex align-items-center",
+                                )
+                            ]
+                        ),
+                        no_update,
                     )
             else:
                 alert_text.append(f"stop {i + 1}")
@@ -158,18 +165,21 @@ def update_output(
             alert_text.append(f"stop {i + 1}")
 
     if alert_text:
-        return html.Div(
-            children=[
-                dbc.Alert(
-                    [
-                        html.I(className="bi bi-exclamation-triangle-fill me-2"),
-                        f"Please enter {', '.join(alert_text)}",
-                    ],
-                    color="warning",
-                    className="d-flex align-items-center",
-                    duration=2000,
-                )
-            ]
+        return (
+            html.Div(
+                children=[
+                    dbc.Alert(
+                        [
+                            html.I(className="bi bi-exclamation-triangle-fill me-2"),
+                            f"Please enter {', '.join(alert_text)}",
+                        ],
+                        color="warning",
+                        className="d-flex align-items-center",
+                        duration=2000,
+                    )
+                ]
+            ),
+            no_update,
         )
 
     d = Driver(
@@ -214,6 +224,14 @@ def update_output(
                 style=OUTPUT_TEXT_STYLE,
             )
         )
+        # toasted_output = dbc.Toast(
+        #     html.Div(output),
+        #     className="mb-0",
+        #     id="toast",
+        #     header="Here is your path:",
+        #     dismissable=True,
+        #     style={"width": "100%"},
+        # )
 
         return output
 
@@ -227,7 +245,7 @@ def update_output(
     else:
         output = store["user_input"]
 
-    return [
+    return (
         dbc.Toast(
             html.Div(output),
             className="mb-0",
@@ -237,7 +255,7 @@ def update_output(
             style={"width": "100%"},
         ),
         store,
-    ]
+    )
 
 
 @callback(
@@ -250,3 +268,25 @@ def update_href(n_clicks, _):
     if n_clicks > 0:
         return "#output"
     return no_update
+
+
+@callback(
+    Output("recalculate-alert", "children"),
+    [
+        Input("input-method", "value"),
+        Input("input-metric", "value"),
+        Input("url", "hash"),
+    ],
+)
+def update_alerts(method, metric, hash):
+    if hash == "#output":
+        changed_id = [p["prop_id"] for p in callback_context.triggered][0]
+        print(changed_id)
+        if not changed_id:
+            return None
+        if changed_id == "input-metric.value" or changed_id == "input-method.value":
+            return dbc.Alert(
+                "You must recalculate to see changes.", color="info", duration=3000
+            )
+    else:
+        return None
