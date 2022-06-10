@@ -92,14 +92,14 @@ layout = html.Div(
                                                     options=[
                                                         {
                                                             "label": "Time",
-                                                            "value": "time",
+                                                            "value": "duration",
                                                         },
                                                         {
                                                             "label": "Distance",
                                                             "value": "distance",
                                                         },
                                                     ],
-                                                    value="time",
+                                                    value="duration",
                                                     inline=True,
                                                 ),
                                             ],

@@ -37,18 +37,20 @@ def naive_tsp(valid_paths, adj_matrix, already_looked_up):
 
     return [out_path, out_cost]
 
+def is_digit(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
 
 def parse_time(str):
     """Return minutes version from string containing days, hours, minutes"""
     lst = str.split(" ")
     time = 0
-
-    def is_digit(value):
-        try:
-            int(value)
-            return True
-        except ValueError:
-            return False
+    
+    if "mi" in str:
+        return parse_distance(str)
 
     for i, element in enumerate(lst):
         if i % 2:
@@ -63,6 +65,9 @@ def parse_time(str):
                 time += int(element)
     return time
 
+def parse_distance(str):
+    """Return float of miles from string containing distance and units"""
+    return float(str.split()[0])
 
 if __name__ == "__main__":
     assert parse_time("1 day, 1 hour, 1 min") == 1501
